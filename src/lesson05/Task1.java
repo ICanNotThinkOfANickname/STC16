@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 public class Task1 {
     public static void main(String[] args) {
         try {
@@ -13,14 +15,14 @@ public class Task1 {
             File file = new File("note");
             BufferedReader bufferedReader = null;
             try {
-                bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+                bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), UTF_8));
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
             }
             String line = null;
             while (true) {
                 try {
-                    if (!((line = bufferedReader.readLine()) != null)) break;
+                    if ((line = bufferedReader.readLine()) == null) break;
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
