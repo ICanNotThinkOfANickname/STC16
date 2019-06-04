@@ -1,4 +1,4 @@
-package lesson05;
+package lesson05.Tasks1;
 
 import java.io.*;
 import java.util.HashSet;
@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Comparator.comparing;
 
 public class Task1 {
     public static void main(String[] args) {
@@ -26,17 +27,17 @@ public class Task1 {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                String[] tokens = line.toLowerCase().split("[ .,?!:;–-]+");
+                String[] tokens = line.split("[ .,?!:;–-]+");
 
                 for (String token : tokens) {
                     list.add(token);
                 }
             }
-            TreeSet<String> sortedSet = new TreeSet<>();
+            TreeSet<String> sortedSet = new TreeSet<>(comparing(String::toLowerCase));
             sortedSet.addAll(list);
             Iterator<String> iterator = sortedSet.iterator();
             while (iterator.hasNext()) {
-                Writer writer = new FileWriter("newnote.txt");
+                Writer writer = new FileWriter("newNote.txt");
                 for (String string : sortedSet) {
                     writer.write(string);
                     writer.write(System.getProperty("line.separator"));
