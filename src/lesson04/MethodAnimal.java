@@ -9,11 +9,11 @@ public class MethodAnimal {
     /*Map - для поиска, Set - сортировка.*/
     /*Добавление животного*/
     public void addAnimal(Animal animal) {
-        if (animalMap.containsKey(animal.getAnimalName())) {
-            System.out.println("Животное " + animal.getAnimalName() + " добавлено");
+        if (animalMap.containsKey(animal.getName())) {
+            System.out.println("Животное " + animal.getName() + " добавлено");
         }
         animalSet.add(animal);
-        animalMap.put(animal.getAnimalName(), animal);
+        animalMap.put(animal.getName(), animal);
     }
 
     /*Поиск животного*/
@@ -33,8 +33,8 @@ public class MethodAnimal {
         while (animalIterator.hasNext()) {
             oldNameAnimal = animalIterator.next();
             if (oldNameAnimal.getId() == id) {
-                newNameAnimal = new Animal(oldNameAnimal.getId(), oldNameAnimal.getAnimalName(), person, oldNameAnimal.getWeight());
-                animalMap.replace(oldNameAnimal.getAnimalName(), newNameAnimal);
+                newNameAnimal = new Animal(oldNameAnimal.getId(), oldNameAnimal.getName(), person, oldNameAnimal.getWeight());
+                animalMap.replace(oldNameAnimal.getName(), newNameAnimal);
                 animalSet.add(newNameAnimal);
                 animalSet.remove(oldNameAnimal);
                 break;
@@ -50,9 +50,9 @@ public class MethodAnimal {
         while (animalIterator.hasNext()) {
             oldNameAnimal = animalIterator.next();
             if (oldNameAnimal.getId() == id) {
-                newNameAnimal = new Animal(oldNameAnimal.getId(), animal, oldNameAnimal.getMasterName(), oldNameAnimal.getWeight());
-                animalMap.remove(oldNameAnimal.getAnimalName(), oldNameAnimal);
-                animalMap.put(newNameAnimal.getAnimalName(), newNameAnimal);
+                newNameAnimal = new Animal(oldNameAnimal.getId(), animal, oldNameAnimal.getPerson(), oldNameAnimal.getWeight());
+                animalMap.remove(oldNameAnimal.getName(), oldNameAnimal);
+                animalMap.put(newNameAnimal.getName(), newNameAnimal);
                 animalSet.add(newNameAnimal);
                 animalSet.remove(oldNameAnimal);
                 break;

@@ -21,13 +21,8 @@ public class ObjectBox<T extends Object> {
                 '}';
     }
 
-    public void find(T object) {
-        for (Object o : newList) {
-            if (o.equals(object)) {
-                System.out.println("Object found " + o);
-                break;
-            }
-        }
+    public void removeObject(T object) {
+        this.newList.remove(object);
     }
 
     @Override

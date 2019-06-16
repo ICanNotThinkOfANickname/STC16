@@ -12,7 +12,7 @@ public class Array {
             numberAlreadyExists = false;
             int newRandomValue = random.nextInt();
             for (int j = 0; j < i; j++) {
-                if (numbers[j] == (Integer) newRandomValue) {
+                if (numbers[j].equals((Integer) newRandomValue)) {
                     numberAlreadyExists = true;
                     break;
                 }

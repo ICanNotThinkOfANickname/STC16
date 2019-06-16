@@ -2,14 +2,14 @@ package lesson04;
 
 public class Animal implements Comparable {
     private int id;
-    private String animalName;
-    private Person masterName;
-    private double weight;
+    private String name;
+    private Person person;
+    private int weight;
 
-    public Animal(int id, String animalName, Person masterName, double weight) {
+    public Animal(int id, String name, Person person, int weight) {
         this.id = id;
-        this.animalName = animalName;
-        this.masterName = masterName;
+        this.name = name;
+        this.person = person;
         this.weight = weight;
     }
 
@@ -17,46 +17,44 @@ public class Animal implements Comparable {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public Person getPerson() {
+        return person;
     }
 
-    public String getAnimalName() {
-        return animalName;
+    public String getName() {
+        return name;
     }
 
-    public void setAnimalName(String animalName) {
-        this.animalName = animalName;
-    }
-
-    public Person getMasterName() {
-        return masterName;
-    }
-
-    public void setMasterName(Person masterName) {
-        this.masterName = masterName;
-    }
-
-    public double getWeight() {
+    public int getWeight() {
         return weight;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
     }
 
     @Override
     public String toString() {
         return "Animal{" +
                 "id=" + id +
-                ", animalName='" + animalName + '\'' +
-                ", masterName='" + masterName + '\'' +
+                ", name='" + name + '\'' +
+                ", person=" + person +
                 ", weight=" + weight +
                 '}';
     }
 
     @Override
     public int compareTo(Object o) {
-        return 0;
+        Animal animal = (Animal) o;
+        int result = 0;
+        int resultPerson = this.getPerson().compareTo(animal.getPerson());
+        int resultWeight = this.getWeight() - animal.getWeight(); //0 - равный, <0 this меньше,
+        int resultName = this.getName().compareTo(animal.getName()); //0 - равный, <0 this меньше,
+
+        if (resultPerson == 0) {
+            if (resultName == 0) {
+                result = resultWeight;
+            } else
+                result = resultName;
+        } else {
+            result = resultPerson;
+        }
+        return result;
     }
 }

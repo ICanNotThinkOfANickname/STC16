@@ -21,9 +21,10 @@ public class MathBox extends ObjectBox<Number> {
     }
 
     public TreeSet<Integer> splitter(int del) {
+        List<Integer> result = new ArrayList<>();
         for (Integer number : newSet) {
             double newNumber = (double) number / del;
-            System.out.println("Делимое " + number + " Делитель " + del + " Частное " + newNumber);
+            result.add((int) newNumber);
         }
         return newSet;
     }

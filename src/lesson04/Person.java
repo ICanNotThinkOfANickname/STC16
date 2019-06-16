@@ -1,51 +1,45 @@
 package lesson04;
 
-public class Person implements Comparable {
-    private String masterName;
-    private int age;
+public final class Person implements Comparable {
+    private String name;
+    private Integer age;
     private String sex;
 
-    public Person(String masterName, int age, String sex) {
-        this.masterName = masterName;
+    public Person(String name, Integer age, String sex) {
+        this.name = name;
         this.age = age;
-        this.sex = sex;
-    }
-
-    public String getMasterName() {
-        return masterName;
-    }
-
-    public void setMasterName(String masterName) {
-        this.masterName = masterName;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
         this.sex = sex;
     }
 
     @Override
     public String toString() {
         return "Person{" +
-                "masterName='" + masterName + '\'' +
+                "name='" + name + '\'' +
                 ", age=" + age +
                 ", sex='" + sex + '\'' +
                 '}';
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
     @Override
     public int compareTo(Object o) {
-        return 0;
+        Person person = (Person) o;
+        int result;
+        result = this.getName().compareTo(person.getName());
+        if (result == 0) {
+            result = this.getAge() - person.getAge();
+        }
+        return result;
     }
 }
