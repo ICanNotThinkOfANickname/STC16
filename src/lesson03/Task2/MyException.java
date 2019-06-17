@@ -1,4 +1,4 @@
-package lesson03.task2;
+package lesson03.Task2;
 
 public class MyException extends Exception {
     private String message;

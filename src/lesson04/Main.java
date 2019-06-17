@@ -26,7 +26,7 @@ public class Main {
         System.out.println("\"Поиск животного\"");
         Animal findAnimal = methodAnimal.findAnimal("Cercei");
         if (findAnimal != null) {
-            System.out.println("\"Животное найдено \" : " + findAnimal.getAnimalName() + findAnimal.toString());
+            System.out.println("\"Животное найдено \" : " + findAnimal.getName() + findAnimal.toString());
         }
         System.out.println("_________________");
         System.out.println("\"Изменение хозяина животного под номером 3\"");

@@ -1,4 +1,4 @@
-package lesson03.task1;
+package lesson03.Task1;
 
 import java.util.Random;
 

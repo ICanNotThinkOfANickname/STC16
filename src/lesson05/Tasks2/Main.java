@@ -1,5 +1,4 @@
 package lesson05.Tasks2;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,43 +7,33 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+        /* Создание массива слов initWords размерностью <=1000 для генерирования предложений */
         File file = new File("vocabulary.txt");
-        BufferedReader bufferedReader = null;
-        try {
-            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), UTF_8));
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        }
+        BufferedReader bufferedReaderFirst = new BufferedReader(new InputStreamReader(new FileInputStream(file), UTF_8));
         List<String> initWords = new ArrayList<>();
-        String inputFirst;
+        String inputString;
         for (int i = 0; i < 1000; i++) {
-            inputFirst = bufferedReader.readLine();
-            initWords.add(inputFirst);
+            inputString = bufferedReaderFirst.readLine();
+            initWords.add(inputString);
         }
-        bufferedReader.close();
-        System.out.println("Размерность массива " + initWords.size() + ": " + initWords);
+        bufferedReaderFirst.close();
+        System.out.println("Массив размерностью " + initWords.size() + ": " + initWords);
 
-
-        try {
-            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), UTF_8));
-        } catch (
-                FileNotFoundException ex) {
-            ex.printStackTrace();
-        }
-
+        /* Создание массива слов words размерностью <=1000 для реализации вероятности */
+        BufferedReader bufferedReaderSecond = new BufferedReader(new InputStreamReader(new FileInputStream(file), UTF_8));
         List<String> words = new ArrayList<>();
-        String inputSecond;
-        while ((inputSecond = bufferedReader.readLine()) != null) {
-            words.add(inputSecond);
+        String inputLineSecond;
+        while ((inputLineSecond = bufferedReaderSecond.readLine()) != null) {
+            words.add(inputLineSecond);
         }
-        bufferedReader.close();
-        System.out.println("Размерность массива " + words.size() + ": " + words + "\r\n");
-
-
+        bufferedReaderSecond.close();
+        System.out.println("Массив слов words размерностью " + words.size() + ": " + words + "\r\n");
         GenerateClass generateClass = new GenerateClass(initWords, words);
-        generateClass.generateParagraph(15, 20, 0.7);
 
+        generateClass.generateParagraph(15, 20, 0.9);
+
+        /* Генерация файлов */
         String[] array = words.stream().toArray(String[]::new);
-        generateClass.getFiles("C:\\", 3, 1000, 2, array);
+        generateClass.getFiles("C:\\", 5, 5120, 50, array);
     }
 }
