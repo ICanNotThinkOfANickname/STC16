@@ -53,7 +53,6 @@ public class Main {
 
     public static void givenFileCompiler() throws IOException {
         try {
-            System.setProperty("java.home", "C:\\Program Files\\Java\\jdk1.8.0_202");
             BufferedReader bufferedReader = new BufferedReader(new FileReader("file.txt"));
             PrintWriter printWriter = new PrintWriter("SomeClass.java");
             String reader = "";
