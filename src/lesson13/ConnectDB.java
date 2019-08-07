@@ -4,12 +4,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
-import java.util.logging.Logger;
 
 public class ConnectDB {
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
         String url = "jdbc:postgresql://localhost:5432/postgres";
         String user = "postgres";
         String password = "123456789";
@@ -58,8 +56,7 @@ public class ConnectDB {
         List<String> descriptions = Arrays.asList("Эмигрант", "Временная прописка", "Нелегал");
         String insertBatchQuery = "INSERT INTO \"ROLE\" (role_id, name, description)\n" +
                 "VALUES (?, ?, ?); ";
-        try {
-            PreparedStatement insertBatch = connection.prepareStatement(insertBatchQuery);
+        try (PreparedStatement insertBatch = connection.prepareStatement(insertBatchQuery)) {
             connection.setAutoCommit(false);
             for (int i = 0; i <= 2; i++) {
                 insertBatch.setInt(1, i);
@@ -77,23 +74,27 @@ public class ConnectDB {
 
         /*Параметризированная выборка по login_ID и name*/
         String query = "SELECT * FROM \"USER\";";
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(query);
-        while (resultSet.next()) {
-            String resultSetLogin = resultSet.getString("login_ID");
-            String resultSetName = resultSet.getString("name");
-            System.out.println("Параметризированная выборка по логину и имени: " + "login_ID: " + resultSetLogin + "; name: " + resultSetName);
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                String resultSetLogin = resultSet.getString("login_ID");
+                String resultSetName = resultSet.getString("name");
+                System.out.println("Параметризированная выборка по логину и имени: " + "login_ID: " + resultSetLogin + "; name: " + resultSetName);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            System.out.println("SqlException");
         }
-        resultSet.close();
-        statement.close();
+
 
         /*Выполнение 2-х SQL операции Insert и установка точки сохранения(SAVEPOINT)*/
         Savepoint savepointOne = connection.setSavepoint("SavepointOne");
         try {
-            insertRow(connection, 1, "Константин", "1980-05-25 10:00:00", "2019-08-01 11:30:00", "Калининград",
+            insertRowToUser(connection, 1, "Константин", "1980-05-25 10:00:00", "2019-08-01 11:30:00", "Калининград",
                     "pochta1980@yandex.ru", "Временная прописка");
-            insertRow(connection, 0, 0, 0);
-            insertRow(connection, 1, 1, 1);
+            insertRowToUserRole(connection, 0, 0, 0);
+            insertRowToUserRole(connection, 1, 1, 1);
             connection.commit();
         } catch (SQLException e) {
             connection.rollback(savepointOne);
@@ -103,7 +104,7 @@ public class ConnectDB {
         /*Выполнение 2-х SQL операции Insert, установка точки сохранения(SAVEPOINT A), ввод некорректных данных*/
         Savepoint savepointA = connection.setSavepoint("SavepointA");
         try {
-            insertRow(connection, 3, "Некорректные данные", "Нелегал");
+            insertRowToRole(connection, 3, "Некорректные данные", "Нелегал");
         } catch (SQLException e) {
             connection.rollback(savepointA);
             System.out.println("SQLException, возврат к точке A");
@@ -112,9 +113,10 @@ public class ConnectDB {
         connection.close();
     }
 
-    public static Connection connectDB(String url, String user, String password) throws SQLException {
+    public static Connection connectDB(String url, String user, String password) throws
+            SQLException, ClassNotFoundException {
         Connection connection = null;
-        DriverManager.registerDriver(new Driver());
+        Class.forName("org.postgresql.Driver");
         connection = DriverManager.getConnection(url, user, password);
         return connection;
     }
@@ -129,8 +131,9 @@ public class ConnectDB {
     }
 
     /*Внесение записей в таблицу USER*/
-    public static void insertRow(Connection connection, int user_id, String name, String dateOfBirth, String login_id,
-                                 String city, String email, String description) throws SQLException {
+    public static void insertRowToUser(Connection connection, int user_id, String name, String dateOfBirth, String
+            login_id,
+                                       String city, String email, String description) throws SQLException {
         String insert = "INSERT INTO \"USER\" (user_id, name, birthday, login_id, city, email, description)" +
                 "VALUES (?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement preparedStatement = connection.prepareStatement(insert);
@@ -146,7 +149,8 @@ public class ConnectDB {
     }
 
     /*Внесение записи в таблицу ROLE*/
-    public static void insertRow(Connection connection, int role_id, String name, String description) throws SQLException {
+    public static void insertRowToRole(Connection connection, int role_id, String name, String description) throws
+            SQLException {
         String insert = "INSERT INTO \"ROLE\" (role_id, name, description)" +
                 "VALUES (?, ?, ?);";
         PreparedStatement prepStat = connection.prepareStatement(insert);
@@ -158,7 +162,8 @@ public class ConnectDB {
     }
 
     /*Внесение записи в таблицу USER_ROLE*/
-    public static void insertRow(Connection connection, int id, int role_id, int user_id) throws SQLException {
+    public static void insertRowToUserRole(Connection connection, int id, int role_id, int user_id) throws
+            SQLException {
         String insert = "INSERT INTO \"USER_ROLE\" (id, role_id, user_id)" +
                 "VALUES (?, ?, ?);";
         PreparedStatement prepStat = connection.prepareStatement(insert);
@@ -172,42 +177,5 @@ public class ConnectDB {
     public static Timestamp stringToTimestampConverter(String givenString) {
         java.sql.Timestamp timestamp = java.sql.Timestamp.valueOf(givenString);
         return timestamp;
-    }
-
-    private static class Driver implements java.sql.Driver {
-        @Override
-        public Connection connect(String url, Properties info) throws SQLException {
-            return null;
-        }
-
-        @Override
-        public boolean acceptsURL(String url) throws SQLException {
-            return false;
-        }
-
-        @Override
-        public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
-            return new DriverPropertyInfo[0];
-        }
-
-        @Override
-        public int getMajorVersion() {
-            return 0;
-        }
-
-        @Override
-        public int getMinorVersion() {
-            return 0;
-        }
-
-        @Override
-        public boolean jdbcCompliant() {
-            return false;
-        }
-
-        @Override
-        public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-            return null;
-        }
     }
 }
